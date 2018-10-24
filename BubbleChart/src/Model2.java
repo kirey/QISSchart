@@ -2,17 +2,30 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.POIXMLDocumentPart;
+import org.apache.poi.xslf.usermodel.SlideLayout;
 import org.apache.poi.xslf.usermodel.TextAlign;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFPictureData;
+import org.apache.poi.xslf.usermodel.XSLFRelation;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
+import org.apache.poi.xslf.usermodel.XSLFSlideMaster;
 import org.apache.poi.xslf.usermodel.XSLFTable;
 import org.apache.poi.xslf.usermodel.XSLFTableCell;
 import org.apache.poi.xslf.usermodel.XSLFTableRow;
 import org.apache.poi.xslf.usermodel.XSLFTextParagraph;
 import org.apache.poi.xslf.usermodel.XSLFTextRun;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTBlip;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTBlipFillProperties;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTRelativeRect;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTable;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTableCell;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTableProperties;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -21,14 +34,22 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
 public class Model2 {
 
-	public static void createTableModel2(File file, XMLSlideShow ppt, XSLFSlide slide) throws IOException {
+	public static void generateModel(File pptFileModel2) throws IOException {
 
-			// Add table to ppt on the same page
+		    //CREATE SLIDE SHOW
+		
+			XMLSlideShow ppt = new XMLSlideShow();	
+			XSLFSlideMaster slideMaster = ppt.getSlideMasters()[0];
+			XSLFSlideLayout slideLayout = slideMaster.getLayout(SlideLayout.BLANK);
+			XSLFSlide slide1 = ppt.createSlide(slideLayout);
+			
+			//SET TITLE
+			Utils.createSlideTitle(slide1, "Model 2");
 			
 			int numColumns = 3;
 			int numRows = 3;
 					
-			XSLFTable tbl = slide.createTable();
+			XSLFTable tbl = slide1.createTable();
 					
 			Dimension pgsize = ppt.getPageSize();
 		    int pgx = pgsize.width; //slide width in points
@@ -134,9 +155,17 @@ public class Model2 {
 				r.setFontSize(10);
 				r.setText("78.2");
 				
-			
+				//TEST IMAGE IN TABLE
+				//  ????
 				
 			}
+			
+			//CLOSE
+			FileOutputStream out = new FileOutputStream(pptFileModel2);
+			ppt.write(out);
+			System.out.println("PowerPoint with image created!");
+
+			out.close();
 			
 		}
 	

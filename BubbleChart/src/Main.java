@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +30,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.CenterTextMode;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.RingPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -55,10 +60,23 @@ public class Main {
 		
 		final List<DemoDataObj> demoData = demoData();
 		
-		//CREATE SLIDE SHOW
+		File pptFileModel1 = new File("Model1.pptx");
+		Model1.generateModel1(pptFileModel1);
+		
+		File pptFileModel2 = new File("Model2.pptx");
+		Model2.generateModel(pptFileModel2);
+		
+		File pptFileModel3 = new File("Model3.pptx");
+		Model3.generateModel(pptFileModel3);
+		
+		File pptFileModel4 = new File("Model4.pptx");
+		//Model4.generateModel(pptFileModel4);
+		
+		/*//CREATE SLIDE SHOW
 		XMLSlideShow ppt = new XMLSlideShow();	
 		XSLFSlideMaster slideMaster = ppt.getSlideMasters()[0];
 		XSLFSlideLayout slideLayout = slideMaster.getLayout(SlideLayout.BLANK);
+		
 		XSLFSlide slide = ppt.createSlide(slideLayout);
 		//XSLFSlide slide1 = ppt.createSlide(slideMaster.getLayout(SlideLayout.TITLE_AND_CONTENT));
 		XSLFSlide slide2 = ppt.createSlide();
@@ -77,23 +95,23 @@ public class Main {
 	    int pgx = pgsize.width; //slide width in points
 	    int pgy = pgsize.height; //slide height in points
 		
-		int width = 560; /* Width of the image */
-		int height = 370; /* Height of the image */
-		ChartUtilities.saveChartAsPNG(bubbleChart, createBubbleChart(), width, height);
-		ChartUtilities.saveChartAsPNG(pieChartRobustness, createPieChart(createDatasetPie(4.8, 3.6), "Robustness"), 330, 330);
-		ChartUtilities.saveChartAsPNG(pieChartConformity, createPieChart(createDatasetPie(100.0, 99.94), "Conformity"), 330, 330);
-		ChartUtilities.saveChartAsPNG(barChartRobustness, createBarChart(createProgressBarDataset(), "Robustness"), 200, 350);
-		ChartUtilities.saveChartAsPNG(barStackedChartRobustness, createStackedBarChart(createStackedBarDataset(3.6, 4.8, 4.0), "Robustness"), 350, 150);
-		ChartUtilities.saveChartAsPNG(barStackedChartConformity, createStackedBarChart(createStackedBarDataset(99.94, 100, 95.0), "Conformity"), 350, 150);
-		ChartUtilities.saveChartAsPNG(ringPlot, createRingChart(createDatasetPie(100.0, 65.0), "Ring Test"), 200, 200);
+		int width = 560;  Width of the image 
+		int height = 370;  Height of the image 
+		ChartUtilities.saveChartAsPNG(bubbleChart, Charts.createBubbleChart(createDataset()), width, height);
+		ChartUtilities.saveChartAsPNG(pieChartRobustness, Charts.createPieChart3D(createDatasetPie(4.8, 3.6), "Robustness"), 330, 330);
+		ChartUtilities.saveChartAsPNG(pieChartConformity, Charts.createPieChart(createDatasetPie(100.0, 99.94), "Conformity"), 330, 330);
+		ChartUtilities.saveChartAsPNG(barChartRobustness, Charts.createBarChart(createProgressBarDataset(), "Robustness"), 200, 350);
+		ChartUtilities.saveChartAsPNG(barStackedChartRobustness, Charts.createStackedBarChart(createStackedBarDataset(3.6, 4.8, 4.0), "Robustness"), 350, 150);
+		ChartUtilities.saveChartAsPNG(barStackedChartConformity, Charts.createStackedBarChart(createStackedBarDataset(99.94, 100, 95.0), "Conformity"), 350, 150);
+		ChartUtilities.saveChartAsPNG(ringPlot, Charts.createRingChart(createDatasetPie(4.8, 3.6), "Robustness"), 200, 200);
 		//createStackedBarDataset
 		System.out.println("Image rendered!");
 
 		
 		//ADDING ELEMENTS ON SLIDE
 		File file = new File("PowerPointBubble.pptx");
-
-		createSlideTitle(slide, "Model 1");
+		File pptFileModel1 = new File("Model1.pptx");
+        createSlideTitle(slide, "Model 1");
 		createPresentationWithImage(bubbleChart, file, ppt, slide, new Rectangle(pgx/2, 35, (int)(560*0.60), (int)(370*0.60)));
 		createPresentationWithImage(pieChartRobustness, file, ppt, slide, new Rectangle(35, pgy/2-35, (int)(330*0.6), (int)(330*0.6)));
 		createPresentationWithImage(pieChartConformity, file, ppt, slide, new Rectangle(pgx/2, pgy/2-35, (int)(330*0.6), (int)(330*0.6)));
@@ -105,7 +123,7 @@ public class Main {
 		Model2.createTableModel2(file, ppt, slide2);
 
 		//////TEST///// inserting image to layout content
-		/*
+		
 		//String img = "BubbleChart.png";
 		//BufferedImage myPicture = ImageIO.read(new File(imagePath));
 		
@@ -129,7 +147,7 @@ public class Main {
 		
 		XSLFTextShape title2 =  slide1.getPlaceholder(0);
 		title2.setText("Model 2");
-		*/
+		
 		
 		//-----slide 2-----
 		//**XSLFGroupShape group1 = slide2.createGroup(); 
@@ -143,7 +161,7 @@ public class Main {
 
 		out.close();
 
-		showAvailableSlideLayouts();
+		showAvailableSlideLayouts();*/
 	}
 
 	private static void createSlideTitle(XSLFSlide slide, String string) {
@@ -160,7 +178,7 @@ public class Main {
 		
 	}
 
-	//CHART
+	/*//CHART
 	private static XYZDataset createDataset() {
 		DefaultXYZDataset dataset = new DefaultXYZDataset();
 
@@ -173,25 +191,7 @@ public class Main {
 		return dataset;
 	}
 	
-	private static JFreeChart createBubbleChart() {
-		// Create dataset
-		XYZDataset dataset = createDataset();
-
-		// Create chart
-		JFreeChart chart = ChartFactory.createBubbleChart("Bubble demo", "X-Values", "Y-Values", dataset);
-
-		// Set range for X-Axis
-		XYPlot plot = chart.getXYPlot();
-		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
-		domain.setRange(0, 5);
-
-		// Set range for Y-Axis
-		NumberAxis range = (NumberAxis) plot.getRangeAxis();
-		range.setRange(0, 100);
-		
-
-		return chart;
-	}
+	
 	
 	//PIE
 	private static PieDataset createDatasetPie( Double target, Double currentVal) {
@@ -200,38 +200,14 @@ public class Main {
 	      dataset.setValue( "Target", Math.abs(target-currentVal));   
 	      return dataset;         
 	}
-	
-	private static JFreeChart createPieChart(PieDataset dataset, String chartName ) {
-	      JFreeChart chart = ChartFactory.createPieChart(      
-	         chartName,   // chart title 
-	         dataset,          // data    
-	         true,             // include legend   
-	         true, 
-	         false);
-
-	      chart.getPlot().setBackgroundPaint(Color.WHITE);
-	      return chart;
-	  }
-
-	private static JFreeChart createRingChart(PieDataset pieDataset, String chartName ) {
-	      JFreeChart chart = ChartFactory.createRingChart(     
-	         chartName,   // chart title 
-	         pieDataset,          // data    
-	         true,             // include legend   
-	         true,      //tooltip
-	         false);
-
-	      chart.getPlot().setBackgroundPaint(Color.WHITE);
-	      return chart;
-	  }
-	
+		
 	private static CategoryDataset createProgressBarDataset() {
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();		 
 		dataset.addValue(4.0, "Target", "");
 		dataset.addValue(3.6, "Index", "");
 		return dataset;		
-	}
+	}*/
 	
 	private static JFreeChart createBarChart(CategoryDataset dataset, String chartName ) {
 		 JFreeChart chart=ChartFactory.createBarChart(
@@ -264,38 +240,17 @@ public class Main {
          return chart;
 	}
 	
-	private static JFreeChart createStackedBarChart(CategoryDataset dataset, String chartName ) {
-		final JFreeChart chart = ChartFactory.createStackedBarChart(
-				  chartName, 
-				  "", 
-				  chartName + " vs Target",
-				  dataset, 
-				  PlotOrientation.HORIZONTAL, 
-				  true, 
-				  true, 
-				  false);
-
-				  chart.setBackgroundPaint(new Color(255, 255, 255));
-
-				  CategoryPlot plot = chart.getCategoryPlot();
-				  plot.getRenderer().setSeriesPaint(0, new Color(248, 82, 47));
-				  plot.getRenderer().setSeriesPaint(1, new Color(240, 230, 19));
-				  plot.getRenderer().setSeriesPaint(2, new Color(19, 201, 7));
-
-				  return chart;
-	}
-	
-	private static CategoryDataset createStackedBarDataset(double index, double target, double threshold) {
-		/*  double[][] data = new double[][]{
+	/*private static CategoryDataset createStackedBarDataset(double index, double target, double threshold) {
+		  double[][] data = new double[][]{
 		  {210},
 		  {200},
 		  };
 		  CategoryDataset ds =  DatasetUtilities.createCategoryDataset(
-		  "Team ", "Match", data);*/
+		  "Team ", "Match", data);
 		
-		/*double index = 3.6;
+		double index = 3.6;
 		double target = 4.8;
-		double threshold = 4.0;*/
+		double threshold = 4.0;
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();	
 		
@@ -304,7 +259,7 @@ public class Main {
 		dataset.addValue(target - Math.max(index,threshold), "Target", "");
 		
 		return dataset;	
-	}
+	}*/
 	
 	public static List<DemoDataObj> demoData(){
 		
